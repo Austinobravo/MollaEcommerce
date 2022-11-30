@@ -26,11 +26,22 @@
     <meta name="theme-color" content="#ffffff">
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/jquery.countdown.css'%}">
     <link rel="stylesheet" href="{% static 'assets/css/plugins/owl-carousel/owl.carousel.css'%}">
     <link rel="stylesheet" href="{% static 'assets/css/plugins/magnific-popup/magnific-popup.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/plugins/nouislider/nouislider.css'%}">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
     <link rel="stylesheet" href="{% static 'assets/css/demos/demo-15.css'%}">
+   <!-- Alertify Css File -->
+    <link rel="stylesheet" href="{% static 'assets/css/alertify.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/alertify.rtl.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/default.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/default.rtl.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.rtl.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/semantic.css'%}">
+    <link rel="stylesheet" href="{% static 'assets/css/semantic.rtl.css'%}">    
     <!-- User js file -->
     <script type="text/javascript">
     var user = '{{request.user}}'
@@ -50,7 +61,7 @@
         }
         return cookieValue;
 }
-const csrftoken = getToken('csrftoken');
+let csrftoken = getToken('csrftoken');
 
 function getCookie(name) {
     var cookieArr = document.cookie.split(";");
@@ -69,6 +80,7 @@ if(cart == undefined){
     cart = {}
     console.log('Cart was created');
     document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
 }
 console.log('Cart:', cart);
     </script>
@@ -94,9 +106,20 @@ console.log('Cart:', cart);
                                 <li class="megamenu-container ">
                                     <a href="" >Store</a>
                                 </li>
+                                {% if user.is_anonymous%}
                                 <li class="megamenu-container ">
-                                    <a href="" >Login</a>
+                                    <a href="{% url 'registration'%}" >Login | register</a>
                                 </li>
+                                {%else%}
+                                <li class="megamenu-container ">
+                                    <a href="{% url 'registration'%}" >Welcome <small>{{user.username}}</small></a>
+                                </li>
+                                {%endif%}
+                                {% if user.is_authenticated%}
+                                <li class="megamenu-container ">
+                                    <a href="" >Signout</a>
+                                </li>
+                                {%endif%}
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
@@ -104,10 +127,11 @@ console.log('Cart:', cart);
                     <div class="header-right">
                         <div class="header-search header-search-extended header-search-visible">
                             <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
+                            <form action="{% url 'search'%}" method="post">
+                                {%csrf_token%}
                                 <div class="header-search-wrapper">
                                     <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
+                                    <input type="search" class="form-control" name="search_button" id="q" placeholder="Search product ..." required>
                                     <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
                                 </div><!-- End .header-search-wrapper -->
                             </form>
@@ -121,18 +145,17 @@ console.log('Cart:', cart);
                         <div class="dropdown cart-dropdown">
                             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">{{cartitems}}</span>
+                                <span class="cart-count" id="">{{cartitems}}</span>
                             </a>
-
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="dropdown-cart-products">
                                     {% for items in items%}
                                     <div class="product">
                                         <div class="product-cart-details">
                                             <h4 class="product-title">
-                                                <a href="product.html" title="{{items.product.name}}">{{items.product.name}}</a>
+                                                <a href="{%url 'cartid' items.product.id %}" title="{{items.product.name}}">{{items.product.name}}</a>
                                             </h4>
-
+                                            
                                             <span class="cart-product-info">
                                                 <span class="cart-product-qty">{{items.quantity}}</span>
                                                 x ${{items.product.price}}
@@ -140,7 +163,7 @@ console.log('Cart:', cart);
                                         </div><!-- End .product-cart-details -->
 
                                         <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
+                                            <a href="{%url 'cartid' items.product.id %}" class="product-image">
                                                 <img src="{{items.product.ImageFIRSTURL}}" alt="product">
                                             </a>
                                         </figure>
@@ -148,10 +171,10 @@ console.log('Cart:', cart);
                                     </div><!-- End .product -->
                                     {%endfor%}
                                 </div><!-- End .cart-product -->
-
+                                
                                 <div class="dropdown-cart-total">
                                     <span>Total</span>
-
+                                    
                                     <span class="cart-total-price">${{order.get_cart_total}}</span>
                                 </div><!-- End .dropdown-cart-total -->
 
@@ -166,9 +189,9 @@ console.log('Cart:', cart);
             </div><!-- End .header-middle -->
         </header><!-- End .header -->
         {% block content%}
-
+        
         {%endblock%}
-
+        
         <footer class="footer">
             <div class="footer-middle">
                 <div class="container-fluid">
@@ -177,6 +200,7 @@ console.log('Cart:', cart);
                             <div class="widget widget-about">
                                 <img src="{% static 'assets/images/demos/demo-15/logo-footer.png'%}" class="footer-logo" alt="Footer Logo" width="105" height="25">
                                 <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. </p>
+                                
                                 
                                 <div class="widget-about-info">
                                     <div class="row">
@@ -194,11 +218,11 @@ console.log('Cart:', cart);
                                 </div><!-- End .widget-about-info -->
                             </div><!-- End .widget about-widget -->
                         </div><!-- End .col-sm-12 col-lg-4 -->
-
+        
                         <div class="col-sm-4 col-lg-2">
                             <div class="widget">
                                 <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
-
+        
                                 <ul class="widget-list">
                                     <li><a href="about.html">About Molla</a></li>
                                     <li><a href="#">How to shop on Molla</a></li>
@@ -208,11 +232,11 @@ console.log('Cart:', cart);
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-4 col-lg-2 -->
-
+        
                         <div class="col-sm-4 col-lg-2">
                             <div class="widget">
                                 <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
-
+        
                                 <ul class="widget-list">
                                     <li><a href="#">Payment Methods</a></li>
                                     <li><a href="#">Money-back guarantee!</a></li>
@@ -223,11 +247,11 @@ console.log('Cart:', cart);
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-4 col-lg-2 -->
-
+        
                         <div class="col-sm-4 col-lg-2">
                             <div class="widget">
                                 <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
-
+        
                                 <ul class="widget-list">
                                     <li><a href="#">Sign In</a></li>
                                     <li><a href="cart.html">View Cart</a></li>
@@ -237,16 +261,17 @@ console.log('Cart:', cart);
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
                         </div><!-- End .col-sm-4 col-lg-2 -->
-
+        
                         <div class="col-sm-6 col-lg-2">
                             <div class="widget widget-newsletter">
                                 <h4 class="widget-title">Sign Up to Newsletter</h4><!-- End .widget-title -->
-
+        
                                 <p>Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan.</p>
                                 
-                                <form action="#">
-                                    <div class="input-group">
-                                        <input type="email" class="form-control" placeholder="Enter your Email Address" aria-label="Email Adress" required>
+                                <form action="{%url 'newsletter'%}" method="post">
+                                    {% csrf_token%}
+                                    <div class="input-group">   
+                                        <input type="email" class="form-control" placeholder="Enter your Email Address"name="newsletter" aria-label="Email Adress" required>
                                         <div class="input-group-append">
                                             <button class="btn btn-dark" type="submit"><i class="icon-long-arrow-right"></i></button>
                                         </div><!-- .End .input-group-append -->
@@ -257,11 +282,11 @@ console.log('Cart:', cart);
                     </div><!-- End .row -->
                 </div><!-- End .container-fluid -->
             </div><!-- End .footer-middle -->
-
+        
             <div class="footer-bottom">
                 <div class="container-fluid">
                     <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p><!-- End .footer-copyright -->
-
+        
                     <div class="social-icons social-icons-color">
                         <span class="social-label">Social Media</span>
                         <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
@@ -273,6 +298,7 @@ console.log('Cart:', cart);
                 </div><!-- End .container-fluid -->
             </div><!-- End .footer-bottom -->
         </footer><!-- End .footer -->
+        
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
@@ -283,9 +309,10 @@ console.log('Cart:', cart);
         <div class="mobile-menu-wrapper">
             <span class="mobile-menu-close"><i class="icon-close"></i></span>
 
-            <form action="#" method="get" class="mobile-search">
+            <form action="{% url 'search'%}" method="post" class="mobile-search">
+                {% csrf_token%}
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <input type="search" class="form-control" name="search_button" id="mobile-search" placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
             
@@ -295,9 +322,20 @@ console.log('Cart:', cart);
                         <a href="{% url 'home'%}">Home</a>
 
                     </li>
-                    <li>
-                        <a href="">Login</a>
+                    {% if user.is_anonymous%}
+                    <li class="megamenu-container ">
+                        <a href="{% url 'registration'%}" >Login | register</a>
                     </li>
+                    {%else%}
+                    <li class="megamenu-container ">
+                        <a href="#" >Welcome <small>{{user.username}}</small></a>
+                    </li>
+                    {%endif%}
+                    {% if user.is_authenticated%}
+                    <li>
+                        <a href="{% url 'logout'%}">signout</a>
+                    </li>
+                    {%endif%}
                 </ul>
             </nav><!-- End .mobile-nav -->
 
@@ -321,8 +359,19 @@ console.log('Cart:', cart);
     <script src="{% static 'assets/js/jquery.magnific-popup.min.js'%}"></script>
     <!-- Main JS File -->
     <script src="{% static 'assets/js/main.js'%}"></script>
+    <script src="{% static 'assets/js/main1.js'%}"></script>
     <script src="{% static 'assets/js/demos/demo-15.js'%}"></script>
     <script src="{% static 'assets/js/cart.js'%}"></script>
+    <script src="{% static 'assets/js/alertify.js'%}"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    {% for message in messages%}
+    <script>
+        alertify.set('notifier','position', 'top-left');
+        alertify.success('{{message}}');
+    </script>
+    {%endfor%}
+
 </body>
 
 

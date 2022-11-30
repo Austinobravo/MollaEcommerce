@@ -58,7 +58,7 @@
                                                 </div><!-- End .cart-product-quantity -->                                 
                                             </td>
 											<td class="total-col ">${{item.get_total}}</td>
-											<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
+											<td class="remove-col"><a href="" class="btn-remove update-cart" data-product="{{items.product.id}}"  data-action="delete" title="Remove Product"><i class="icon-close"></i></a></td>
                                         </tr>
                                         {%endfor%}
 									</tbody>

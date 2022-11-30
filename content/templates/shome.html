@@ -1,0 +1,66 @@
+<!-- templates/home.html -->
+{% extends 'base.html'%}
+{% load static %} <!-- new -->
+{% block content%}
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Payment<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home'%}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Paypal Payment</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <section>
+        <div class="product">
+            <div class="description">
+                <h3>{{ product.name }}</h3>
+                <hr />
+                {% for price in prices %}
+
+                <div>
+                    <h5>${{ price.price }}</h5>
+                    <form action="{% url 'create-checkout-session' price.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Checkout</button>
+                    </form>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+<script type="text/javascript">
+    // Get Stripe publishable key
+fetch("/config/")
+.then((result) => { return result.json(); })
+.then((data) => {
+  // Initialize Stripe.js
+  const stripe = Stripe(data.publicKey);
+
+  // new
+  // Event handler
+  document.querySelector("#submitBtn").addEventListener("click", () => {
+    // Get Checkout Session ID
+    fetch("/create-checkout-session/")
+    .then((result) => { return result.json(); })
+    .then((data) => {
+      console.log(data);
+      // Redirect to Stripe Checkout
+      return stripe.redirectToCheckout({sessionId: data.sessionId})
+    })
+    .then((res) => {
+      console.log(res);
+    });
+  });
+});
+
+</script>
+{%endblock%}

@@ -38,6 +38,8 @@ function addCookieItem(productId, action){
     console.log('cart:', cart);
     document.cookie ='cart=' + JSON.stringify(cart) + ";domain=;path=/"
     location.reload()
+    //document.getElementById('total-items').innerText = data['cartTotal']
+
 }
 
 function UpdateUserOrder(productId, action){
@@ -60,5 +62,8 @@ function UpdateUserOrder(productId, action){
     .then((data) => {
         console.log('data:', data)
         location.reload()
+        //document.getElementById('total-items').innerText = data['cartTotal']
+
     })
 }
+

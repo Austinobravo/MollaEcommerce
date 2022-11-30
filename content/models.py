@@ -1,13 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
+
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True,blank=True)
     first_name = models.CharField(max_length=200,null=True,blank=True)
     last_name = models.CharField(max_length=200,null=True,blank=True)
     phone = models.CharField(max_length=200,null=True,blank=True)
-    email = models.CharField(max_length=200,null=True,blank=True)
-
+    email = models.EmailField(max_length=200,null=True,blank=True)
+    
     def __str__(self):
         return f"{self.first_name} | {self.last_name}"
 
@@ -17,7 +18,7 @@ class Product(models.Model):
     order_product= models.BooleanField(default=False, null=True, blank=True)
     first_image = models.ImageField(null=True, blank=True)
     second_image = models.ImageField(null=True, blank=True)
-
+    description=models.CharField(max_length=10000, null=True, blank=True)
     def __str__(self):
         return self.name
     @property
@@ -38,16 +39,20 @@ class Product(models.Model):
 
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, blank=True)
+    #shipping_address = models.ForeignKey('ShippingAddress', on_delete=models.CASCADE, null=True, blank=True)
+    stripe_payment = models.ForeignKey('Stripe_Payment', on_delete=models.SET_NULL, null=True, blank=True)
+    paypal_payment = models.ForeignKey('Paypal_Payment', on_delete=models.SET_NULL, null=True, blank=True)
+    physical_payment = models.ForeignKey('Physical_Payment', on_delete=models.SET_NULL, null=True, blank=True)
     date_ordered=models.DateTimeField(auto_now_add=True)
     order_complete=models.BooleanField(default=False, null=True, blank=True)
     transaction_id = models.CharField(max_length=200,null=True,blank=True)
 
     def  __str__(self):
-        return str(self.id)
+        return f"{self.customer.first_name} | Order {self.id} "
 
     @property
     def shipping(self):
-        shipping = True
+        shipping = False
         orderitems = self.orderitem_set.all()
         for order in orderitems:
             if order.product.order_product == False:
@@ -83,6 +88,7 @@ class OrderItem(models.Model):
         return total
 
 class ShippingAddress(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True,blank=True)
     customer=models.ForeignKey(Customer,on_delete=models.CASCADE, null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
     house = models.CharField(max_length=200,null=True,blank=True)
@@ -92,9 +98,45 @@ class ShippingAddress(models.Model):
     city = models.CharField(max_length=200,null=True,blank=True)
     zip = models.CharField(max_length=200,null=True,blank=True)
     state = models.CharField(max_length=200,null=True,blank=True)
+    
     #payment = models.Rad(required=False, widget=models.RadioSelect() )
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.house} | {self.order}"
+        return f"{self.customer.first_name} | {self.house}"
+
+class Newsletter(models.Model):
+    email=models.EmailField(max_length=200)
+
+    def __str__(self):
+        return self.email
+
+class Stripe_Payment(models.Model):
+    stripe_charge_id= models.CharField(max_length=100)
+    user= models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    price=models.IntegerField(blank=True, null=True)
+    time=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+class Paypal_Payment(models.Model):
+    paypal_charge_id= models.CharField(max_length=100)
+    user= models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    price=models.IntegerField(blank=True, null=True)
+    time=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
+
+class Physical_Payment(models.Model):
+    physical_charge_id= models.CharField(max_length=100)
+    customer=models.ForeignKey(Customer,on_delete=models.CASCADE, null=True, blank=True)
+    #user= models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    price=models.IntegerField(blank=True, null=True)
+    time=models.DateTimeField(auto_now_add=True)
+    image=models.ImageField()
+    def __str__(self):
+        return f"{self.customer}"
+
 

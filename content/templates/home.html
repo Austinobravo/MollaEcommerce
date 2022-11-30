@@ -10,7 +10,7 @@
                     <h3 class="intro-subtitle">Want to know what's hot?</h3><!-- End .h3 intro-subtitle -->
                     <h1 class="intro-title text-white">Spring Lookbook 2019</h1><!-- End .intro-title -->
 
-                    <a href="#scroll-to-content" class="btn btn-outline-primary-2 scroll-to">
+                    <a href="#title" class="btn btn-outline-primary-2 scroll-to">
                         <span>Start scrolling</span>
                         <i class="icon-long-arrow-down"></i>
                     </a>
@@ -28,29 +28,29 @@
             <div class="row align-items-center">
                 <div class="col-lg-6">
                     <div class="banner banner-light banner-overlay">
-                        <a href="#">
-                            <img src="{% static 'assets/images/demos/demo-15/banners/banner-2.jpg' %}" alt="Banner">
-                        </a>
-
+                        <!-- <a href="#"> -->
+                            <img class="container" src="{% static 'assets/images/demos/demo-15/banners/banner-2.jpg' %}" alt="Banner">
+                        <!-- </a> -->
+                        
                         <div class="banner-content women">
-                            <h2 class="banner-title">02. Dresses for <br>every spring day.</h2><!-- End .banner-title -->
-                            <h3 class="banner-subtitle text-darkblack">IN THIS LOOK</h3><!-- End .banner-subtitle -->
-
-                            <ul>
-                                <li>Light grey linen shirt dress</li>
-                                <li>Gold colour earrings</li>
-                                <li>Brown heel mules</li>
-                            </ul>
-
-                            <div class="banner-text text-darkblack">$20.00 - $96.00</div><!-- End .banner-text -->
-                            <a href="#" class="btn btn-outline-primary-2"><span>Buy All</span><i class="icon-long-arrow-right"></i></a>
+                            <h2 class="banner-title">Search for your order</h2><!-- End .banner-title -->
+                            <!-- <h3 class="banner-subtitle text-darkblack">IN THIS LOOK</h3>End .banner-subtitle    -->
+                                
+                            <form action="{% url 'search'%}" style="margin: auto;width: 100%;" method="post">
+                                {%csrf_token%}
+                                <div class="header-search-wrapper d-flex">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="search_button" id="q" placeholder="Order id..." required>
+                                    <button class="btn btn-primary" style="height: 40px !important; margin-right: 20px !important;" type="submit"><i class="icon-search"></i></button>
+                                </div><!-- End .header-search-wrapper -->
+                            </form>
                         </div><!-- End .banner-content -->
                     </div><!-- End .banner -->
                 </div><!-- End .col-lg-6 -->
 
                 <div class="col-lg-6">
                     <div class="heading text-center">
-                        <h2 class="title">About This Look</h2><!-- End .title text-center -->
+                        <h2 class="title" id="title">About This Look</h2><!-- End .title text-center -->
                         <p class="title-desc">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.</p><!-- End .title-desc -->
                     </div><!-- End .heading -->
 
@@ -59,7 +59,7 @@
                         <div class="col-6 col-md-4">
                             <div class="product product-4">
                                 <figure class="product-media">
-                                    <a href="product.html">
+                                    <a href="{%url 'cartid' order.id%}">
                                         <img src="{{order.ImageFIRSTURL}}" alt="Product first-image" class="product-image">
                                         <img src="{{order.ImageSECONDURL}}" alt="Product second-image" class="product-image-hover">
                                     </a>
@@ -76,7 +76,7 @@
                                 </figure><!-- End .product-media -->
 
                                 <div class="product-body">
-                                    <h3 class="product-title"><a href="product.html">{{order.name}}</a></h3><!-- End .product-title -->
+                                    <h3 class="product-title"><a href="{%url 'cartid' order.id%}">{{order.name}}</a></h3><!-- End .product-title -->
                                     <div class="product-price">
                                         ${{order.price}}
                                     </div><!-- End .product-price -->
@@ -169,129 +169,6 @@
 
     <div class="mb-7"></div><!-- End .mb-7 -->
 
-    <div class="blog-posts mb-9">
-        <div class="container-fluid">
-            <div class="heading text-center">
-                <h2 class="title">From Our Blog</h2><!-- End .title text-center -->
-                <p class="title-desc">Donec odio. Quisque volutpat mattis eros. <br>Nullam malesuada erat</p><!-- End .title-desc -->
-            </div><!-- End .heading -->
-
-            <div class="owl-carousel owl-simple" data-toggle="owl" 
-                data-owl-options='{
-                    "nav": false, 
-                    "dots": true,
-                    "items": 3,
-                    "margin": 20,
-                    "loop": false,
-                    "responsive": {
-                        "0": {
-                            "items":1
-                        },
-                        "520": {
-                            "items":2
-                        },
-                        "768": {
-                            "items":3
-                        },
-                        "992": {
-                            "items":4
-                        }
-                    }
-                }'>
-                <article class="entry">
-                    <figure class="entry-media">
-                        <a href="single.html">
-                            <img src="assets/images/demos/demo-15/blog/post-1.jpg" alt="image desc">
-                        </a>
-                    </figure><!-- End .entry-media -->
-
-                    <div class="entry-body text-center">
-                        <div class="entry-meta">
-                            <a href="#">Nov 22, 2018</a>, 1 Comments
-                        </div><!-- End .entry-meta -->
-
-                        <h3 class="entry-title">
-                            <a href="single.html">Sed adipiscing ornare.</a>
-                        </h3><!-- End .entry-title -->
-
-                        <div class="entry-content">
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. </p>
-                            <a href="single.html" class="read-more">Read More</a>
-                        </div><!-- End .entry-content -->
-                    </div><!-- End .entry-body -->
-                </article><!-- End .entry -->
-
-                <article class="entry">
-                    <figure class="entry-media">
-                        <a href="single.html">
-                            <img src="assets/images/demos/demo-15/blog/post-2.jpg" alt="image desc">
-                        </a>
-                    </figure><!-- End .entry-media -->
-
-                    <div class="entry-body text-center">
-                        <div class="entry-meta">
-                            <a href="#">Dec 12, 2018</a>, 0 Comments
-                        </div><!-- End .entry-meta -->
-
-                        <h3 class="entry-title">
-                            <a href="single.html">Fusce lacinia arcuet nulla.</a>
-                        </h3><!-- End .entry-title -->
-
-                        <div class="entry-content">
-                            <p>Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urnanib ... </p>
-                            <a href="single.html" class="read-more">Read More</a>
-                        </div><!-- End .entry-content -->
-                    </div><!-- End .entry-body -->
-                </article><!-- End .entry -->
-
-                <article class="entry">
-                    <figure class="entry-media">
-                        <a href="single.html">
-                            <img src="assets/images/demos/demo-15/blog/post-3.jpg" alt="image desc">
-                        </a>
-                    </figure><!-- End .entry-media -->
-
-                    <div class="entry-body text-center">
-                        <div class="entry-meta">
-                            <a href="#">Dec 19, 2018</a>, 2 Comments
-                        </div><!-- End .entry-meta -->
-
-                        <h3 class="entry-title">
-                            <a href="single.html">Quisque volutpat mattis eros.</a>
-                        </h3><!-- End .entry-title -->
-
-                        <div class="entry-content">
-                            <p>Quisque volutpat mattis eros. Nullam malesuada eratut turpis. Suspendisse urna nibh, viverra non ...</p>
-                            <a href="single.html" class="read-more">Read More</a>
-                        </div><!-- End .entry-content -->
-                    </div><!-- End .entry-body -->
-                </article><!-- End .entry -->
-
-                <article class="entry">
-                    <figure class="entry-media">
-                        <a href="single.html">
-                            <img src="assets/images/demos/demo-15/blog/post-4.jpg" alt="image desc">
-                        </a>
-                    </figure><!-- End .entry-media -->
-
-                    <div class="entry-body text-center">
-                        <div class="entry-meta">
-                            <a href="#">Dec 25, 2018</a>, 3 Comments
-                        </div><!-- End .entry-meta -->
-
-                        <h3 class="entry-title">
-                            <a href="single.html">Mauris suscipit in massa.</a>
-                        </h3><!-- End .entry-title -->
-
-                        <div class="entry-content">
-                            <p>Nullam malesuada eratut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.</p>
-                            <a href="single.html" class="read-more">Read More</a>
-                        </div><!-- End .entry-content -->
-                    </div><!-- End .entry-body -->
-                </article><!-- End .entry -->
-            </div><!-- End .owl-carousel -->
-        </div><!-- End .container-fluid -->
-    </div><!-- End .blog-posts -->
 </main><!-- End .main -->
 
 

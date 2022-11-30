@@ -1,0 +1,73 @@
+{% extends 'base.html'%}
+{% load static%}
+{%block content%}
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Search Results<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home'%}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Search results</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        {% if mobile_search %}
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true"><h1>You Searched for {{mobile_search}}</h1></a>
+                        </li>
+                        {%else%}
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true"><h1>No Search Result</h1></a>
+                        </li>
+                        {%endif%}
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2"> 
+                            {%if search_result%}        
+                            {% for search in search_result%}
+                            
+                            <div >
+                                
+                                <div>
+                                    <a href="{%url 'cartid' search.id%}" >{{search}}</a>
+                                </div>
+                            
+
+
+                            </div>
+                            
+                            {%endfor%}
+                            
+                            {%elif search_transaction_id_result%}
+                            {% for search in search_transaction_id_result%}
+                            <div >
+                                <div>
+                                    <a href="{% url 'order' search.id%}" >{{search}}</a>
+                                </div>
+                            </div>
+                            {%endfor%}
+                            {%else%}
+                            <p >No Search Result for {{mobile_search}}</p>
+                            {%endif%}
+                        
+                        </div><!-- .End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+    </div><!-- End .login-page section-bg -->
+
+{%endblock%}
+
+                           

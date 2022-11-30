@@ -1,0 +1,165 @@
+{% extends 'base.html'%}
+{% load static%}
+{%block content%}
+<!-- <link rel="stylesheet" href="{% static 'css/payment.css'%}" /> -->
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Payment<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home'%}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Paypal Payment</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-cart table-mobile">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td class="product-col">
+                                <div class="product">
+                                    <figure class="product-media">
+                                        <a href="#">
+                                            <img src="{{item.product.ImageFIRSTURL}}" alt="Product image">
+                                        </a>
+                                    </figure>
+
+                                    <h3 class="product-title">
+                                        <a href="#">{{item.product.name}}</a>
+                                    </h3><!-- End .product-title -->
+                                </div><!-- End .product -->
+                            </td>
+                            <td class="price-col">${{item.product.price}}</td>
+                            <td class="quantity-col">
+                                <div class="cart-product-quantity">
+                                    <div class="btn-outline-dark ">
+                                        {{item.quantity}}  
+                                    </div>
+                                </div><!-- End .cart-product-quantity -->                                 
+                            </td>
+                            <td class="total-col ">${{item.get_total}}</td>
+                        </tr>
+                        {%endfor%}
+                        <tr>
+                            <td colspan="5">
+                                <div id="paypal-button-container"></div>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table><!-- End .table table-wishlist -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Display a payment form -->
+    <div id="paypal-button-container"></div>
+
+
+<!-- Script Tags -->
+<script src="https://www.paypal.com/sdk/js?client-id=AfTZHxoKJsWy5_fNuCj0o0pnQDGSc-g2ifK9znZYbk3Y29ODl1MsEUDT9adJl93IIOFTblEnavjX9su7&currency=USD"></script>
+
+
+<script>
+    let total='{{order.get_cart_total}}'
+    function SubmitFormData() {
+        let url = "{% url 'paypalpayment'%}"
+        fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body:JSON.stringify({'Items':items, 'total': total})
+        })
+        
+}
+
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+
+
+        // style: {
+        // 		layout: 'horizontal',
+        // 		fundingicons: 'true',
+        // 		},
+        		// funding: {
+                // allowed: [ paypal.FUNDING.CARD ],
+                // disallowed: [ paypal.FUNDING.CREDIT ]
+                // },
+
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                    value: parseFloat(total).toFixed(2),
+                    currency_code: 'USD',
+                    breakdown: {
+                        item_total: {value: '7', currency_code: 'USD'}
+                    }
+                },
+               invoice_id: 'muesli_invoice_id',
+                items: [{
+                    name: 'Hafer',
+                    unit_amount: {value: '3', currency_code: 'USD'},
+                    quantity: '1',
+                    sku: 'haf001'
+                }, {
+                    name: 'Discount',
+                    unit_amount: {value: '4', currency_code: 'USD'},
+                    quantity: '1',
+                    sku: 'dsc002'
+                }]
+            }]
+            });
+        },
+
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(orderData) {
+                SubmitFormData()
+                
+                // Successful capture! For demo purposes:
+                // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                // var transaction = orderData.purchase_units[0].payments.captures[0];
+                // alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                // Replace the above to show a success message within this page, e.g.
+                // const element = document.getElementById('paypal-button-container');
+                // element.innerHTML = '';
+                // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                // Or go to another URL:  actions.redirect('thank_you.html');
+            });
+        }
+
+
+    }).render('#paypal-button-container');
+</script>
+
+
+
+<!-- <script src="{% static 'js/payment.js'%}" defer></script> -->
+
+
+
+{%endblock%}

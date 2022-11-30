@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-tpjux5nz*i5n7@$okcqbg0*()*l1*m3+hhcbcsl#lg3uty$6_y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['ecommerce-content-shop.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'content'
+    'django_filters',
+    'content',
 ]
 
 MIDDLEWARE = [
@@ -112,6 +113,12 @@ USE_I18N = True
 
 USE_TZ = True
 
+#Base Url
+BASE_URL = "http://127.0.0.1:8000"
+#Stripe
+STRIPE_PUBLISHABLE_KEY = "pk_test_wtanjavBAWzezMOkke6c0f1u"
+STRIPE_SECRET_KEY = "sk_test_UDPLpXVChteN3W17sMEqpZCV"
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
@@ -120,7 +127,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/img/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/assestsimg/img')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/assests/img')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
 

@@ -1,0 +1,180 @@
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
+<!-- Alertify Css File -->
+<link rel="stylesheet" href="{% static 'assets/css/alertify.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/alertify.rtl.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/default.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/default.rtl.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/bootstrap.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/bootstrap.rtl.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/semantic.css'%}">
+<link rel="stylesheet" href="{% static 'assets/css/semantic.rtl.css'%}">    
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Order for {{person.first_name}}</h1>
+             <button type="submit" onclick="window.print()"  class="btn btn-outline-dark mt-3 btn-order ">
+                <span class="btn-text">Print</span><i class="icon-long-arrow-right"></i>
+                <span class="btn-hover-text">Save as Pdf</span>
+            </button>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab"  role="tab" aria-controls="register-2" aria-selected="true"><h1>Your Order</h1></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2"> 
+                            <section>
+                                <p>
+                                    We appreciate you gave us a chance and made a purchase on our website.
+                                </p>
+                              </section>
+                            <div class="col-lg-9">
+                                <!-- <hr> -->
+		                			<h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                                <hr>
+                                        <div class="col-sm-6">
+                                            <label>Order id:</label>	
+                                            {{transaction_id}}									
+                                            <!-- <input type="text" class="form-control" name="first_name"   > -->
+                                        </div><!-- End .col-sm-6 -->
+        
+                                        <div class="col-sm-6">
+                                            <label>First Name:</label>	
+                                            {{person.first_name}}									
+                                             <!-- <input type="text" class="form-control" name="first_name"   > -->
+                                        </div><!-- End .col-sm-6 -->
+                
+                                        <div class="col-sm-6">
+                                            <label>Last Name:</label>
+                                            {{person.last_name}}									
+                                            <!-- <input type="text" class="form-control" name="last_name"   > -->
+                                        </div><!-- End .col-sm-6 -->
+                                        
+                                        <div class="col-sm-6">
+                                            <label>Email address:</label>
+                                            {{person.email}}									
+                                                                            
+                                             <!-- <input type="text" class="form-control" name="email"   > -->
+                                        </div>
+                
+                                        <div class="col-sm-6">
+                                            <label>Phone:</label>
+                                            {{person.phone}}									
+                                            <!-- <input type="tel" class="form-control" name="phone"   > -->
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+                                    <div class="col-sm-6">
+
+                                        <label>Street address:</label>
+                                        {{house}}
+                                        	
+                                    </div>
+                                    <div class="col-sm-6">
+
+                                        <label>Suite address:</label>
+                                        {{address.suite}}									
+                                    </div>
+
+                                    
+                                    
+                                        <div class="col-sm-6">
+                                            <label>Town / City:</label>
+                                            {{address.city}}									
+                                            <!-- <input type="text" class="form-control" name="city"   > -->
+                                        </div><!-- End .col-sm-6 -->
+                
+                                        <div class="col-sm-6">
+                                            <label>State / County:</label>
+                                            {{address.state}}									
+                                            <!-- <input type="text" class="form-control" name="state"   > -->
+                                        </div><!-- End .col-sm-6 -->
+
+                                    
+                                        <div class="col-sm-6">
+                                            <label>Postcode / ZIP:</label>
+                                            {{address.zip}}									
+                                            <!-- <input type="text" class="form-control" name="zip"   > -->
+                                        </div><!-- End .col-sm-6 -->
+                                        
+                                        <div class="col-sm-6">
+                                            <label>Country:</label>
+                                            {{address.country}}									
+                                            <!-- <input type="text" class="form-control" name="country"   > -->
+                                        </div>
+
+                                    <div class="col-sm-6">
+                                        <label>Order notes (optional):</label>
+                                        {{address.description}}									
+
+                                    </div>
+                                    
+                                    <div class="summary">
+		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
+
+		                					<tbody>
+                                                {% for item in items%}
+		                						<tr>
+		                							<td><a >{{item.product.name}}</a></td>
+		                							<td>${{item.product.price}}</td>
+		                						</tr>
+                                                {%endfor%}
+
+
+		                						<tr class="summary-subtotal">
+		                							<td>Subtotal:</td>
+		                							<td>${{total}}</td>
+		                						</tr><!-- End .summary-subtotal -->
+		                						<tr>
+		                							<td>Shipping:</td>
+		                							<td>Processing</td>
+		                						</tr>
+		                						<tr class="summary-total">
+		                							<td>Total:</td>
+		                							<td name="">${{total}}</td>
+		                						</tr><!-- End .summary-total -->
+		                					</tbody>
+		                				</table><!-- End .table table-summary -->
+		
+
+		                			</div><!-- End .summary -->
+                                    
+                                    </div><!-- End .col-lg-9 -->
+    
+                            
+
+                            
+                        </div><!-- .End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+    </div><!-- End .login-page section-bg -->
+    <script src="{% static 'assets/js/alertify.js'%}"></script>
+    {% for message in messages%}
+    <script>
+        alertify.set('notifier','position', 'top-left');
+        alertify.success('{{message}}');
+    </script>
+    {%endfor%}
+
+
+                           
