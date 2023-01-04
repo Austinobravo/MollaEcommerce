@@ -1,4 +1,14 @@
 			checkout javascript
+            
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'finlend',
+        'USER':'postgres',
+        'PASSWORD':'karmakaz210',
+        'HOST':'localhost',
+        'PORT':'5432'
+    }
 
             
             // var form = document.getElementById('form')
